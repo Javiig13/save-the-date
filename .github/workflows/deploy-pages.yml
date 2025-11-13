@@ -22,10 +22,25 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Build minified assets
+        run: npm run build
+      - name: Prepare dist
+        run: |
+          mkdir -p dist
+          cp index.html config.js sw.js styles.css script.js dist/
+          # Sustituir por minificados si existen
+          if [ -f styles.min.css ]; then cp styles.min.css dist/styles.css; fi
+          if [ -f script.min.js ]; then cp script.min.js dist/script.js; fi
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: 'dist'
 
   deploy:
     needs: build
