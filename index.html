@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Save the Date — Javier & Ana</title>
+    <!-- Tipografías -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.google.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2069&auto=format&fit=crop" />
+
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header" id="top">
+      <nav class="nav">
+        <a class="brand" href="#inicio" aria-label="Ir al inicio">Javier & Ana</a>
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="Abrir menú">☰</button>
+        <ul id="nav-list" class="nav-list">
+          <li><a id="nav-historia" href="#historia">Historia</a></li>
+          <li><a id="nav-ubicacion" href="#ubicacion">Ubicación</a></li>
+          <li><a id="nav-alojamiento" href="#alojamiento">Alojamiento</a></li>
+          <li><a id="nav-rsvp" href="#rsvp">Se ruega contestar</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="inicio">
+      <!-- Hero -->
+      <section class="hero" aria-label="Save the Date">
+        <div class="hero-media" role="img" aria-label="Foto romántica de pareja, estilo mágico"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content container">
+          <p class="eyebrow">Save the Date</p>
+          <h1 id="hero-title" class="title"></h1>
+            <p class="subtitle"><span id="hero-date"></span> · <span id="hero-time"></span></p>
+            <p id="hero-venue" class="subtitle"></p>
+        </div>
+        <div class="stars" aria-hidden="true"></div>
+      </section>
+
+      <!-- Mensaje -->
+  <section class="intro container" aria-label="Mensaje" style="content-visibility:auto; contain-intrinsic-size: 500px;">
+        <p id="intro-text"></p>
+      </section>
+
+      <!-- Cuenta atrás -->
+  <section class="countdown container" aria-labelledby="countdown-title" style="content-visibility:auto; contain-intrinsic-size: 300px;">
+        <h2 id="countdown-title" class="section-title">Cuenta atrás</h2>
+        <div class="timer" role="timer" aria-live="polite">
+          <div class="time-box"><span id="dd">00</span><small>días</small></div>
+          <div class="time-box"><span id="hh">00</span><small>horas</small></div>
+          <div class="time-box"><span id="mm">00</span><small>min</small></div>
+          <div class="time-box"><span id="ss">00</span><small>seg</small></div>
+        </div>
+      </section>
+
+      <!-- Historia -->
+  <section id="historia" class="story container reveal-on-scroll" aria-labelledby="story-title" style="content-visibility:auto; contain-intrinsic-size: 800px;">
+        <h2 id="story-title" class="section-title">Nuestra historia</h2>
+        <ol id="timeline" class="timeline"></ol>
+      </section>
+
+      <!-- Ubicación -->
+  <section id="ubicacion" class="location container reveal-on-scroll" aria-labelledby="location-title" style="content-visibility:auto; contain-intrinsic-size: 900px;">
+        <h2 id="location-title" class="section-title">Ubicación</h2>
+        <div class="location-grid">
+          <div class="location-card">
+            <h3 id="venue-name">Hotel Club de Campo La Caminera</h3>
+            <p id="venue-place">Torrenueva, Ciudad Real · España</p>
+            <p id="bus-note" class="note">Habrá servicio de autobús desde La Caminera hasta Santa Cruz de Mudela.</p>
+            <div class="actions">
+              <a id="venue-link" class="btn btn-ghost" target="_blank" rel="noopener">Abrir en Google Maps</a>
+            </div>
+          </div>
+          <div class="map-panel">
+            <div class="map-tabs" role="tablist" aria-label="Ver mapa">
+              <button class="map-tab is-active" role="tab" aria-selected="true" data-map="venue">La Caminera</button>
+              <button class="map-tab" role="tab" aria-selected="false" data-map="hotel">Hotel Santa Cruz</button>
+              <button class="map-tab" role="tab" aria-selected="false" data-map="route">Ruta entre ambos</button>
+            </div>
+            <div class="map-frame">
+              <iframe id="map-iframe" title="Mapa" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+            </div>
+            <div class="map-info" aria-live="polite">
+              <h3 id="map-info-title" class="map-title"></h3>
+              <p id="map-info-desc" class="map-desc"></p>
+              <a id="map-info-link" class="btn btn-ghost" target="_blank" rel="noopener">Abrir en Google Maps</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Alojamiento -->
+  <section id="alojamiento" class="lodging container reveal-on-scroll" aria-labelledby="lodging-title" style="content-visibility:auto; contain-intrinsic-size: 700px;">
+        <h2 id="lodging-title" class="section-title">Alojamiento</h2>
+        <div id="hotels-list" class="cards"></div>
+      </section>
+
+      <!-- Se ruega contestar -->
+  <section id="rsvp" class="rsvp container reveal-on-scroll" aria-labelledby="rsvp-title" style="content-visibility:auto; contain-intrinsic-size: 400px;">
+        <h2 id="rsvp-title" class="section-title">Se ruega contestar</h2>
+        <p id="rsvp-text"></p>
+        <a id="rsvp-btn" class="btn btn-primary" target="_blank" rel="noopener">Responder en Typeform</a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>© 2026 Javier & Ana</p>
+    </footer>
+
+  <canvas class="cursor-trail-canvas" aria-hidden="true"></canvas>
+    <script src="./config.js"></script>
+    <script src="./script.js" defer></script>
+  </body>
+  </html>

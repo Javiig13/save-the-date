@@ -1,0 +1,14 @@
+{
+  "name": "save-the-date-javier-ana",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:css": "node build/minify-css.js",
+    "build:js": "node build/minify-js.js",
+    "build": "npm run build:css && npm run build:js"
+  },
+  "devDependencies": {
+    "csso": "^5.0.5",
+    "terser": "^5.26.0"
+  }
+}
