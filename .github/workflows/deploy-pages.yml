@@ -34,11 +34,13 @@ jobs:
         run: |
           mkdir -p dist
           cp index.html config.js sw.js favicon.svg dist/
-          cp styles.min.css dist/
-          cp script.min.js dist/
+          # Generados: styles.min.css y script.min.js
+          # Sobrescribir nombres originales para evitar 404 en producción
+          cp styles.min.css dist/styles.css
+          cp script.min.js dist/script.js
           echo "Listado de archivos en dist:" && ls -l dist
-          echo "Primeras líneas de dist/styles.min.css:" && head -n 5 dist/styles.min.css || true
-          echo "Primeras líneas de dist/script.min.js:" && head -n 3 dist/script.min.js || true
+          echo "Primeras líneas de dist/styles.css:" && head -n 5 dist/styles.css || true
+          echo "Primeras líneas de dist/script.js:" && head -n 3 dist/script.js || true
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

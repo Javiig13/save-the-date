@@ -1,9 +1,9 @@
-const CACHE = 'std-cache-v2';
+const CACHE = 'std-cache-v3';
 const ASSETS = [
   './',
   './index.html',
-  './styles.min.css',
-  './script.min.js',
+  './styles.css',
+  './script.js',
   './config.js',
   './favicon.svg'
 ];
