@@ -33,14 +33,9 @@ jobs:
       - name: Prepare dist
         run: |
           mkdir -p dist
-          cp index.html config.js sw.js favicon.svg styles.css script.js dist/
-          # Copiar minificados con su propio nombre
-          if [ -f styles.min.css ]; then cp styles.min.css dist/; fi
-          if [ -f script.min.js ]; then cp script.min.js dist/; fi
-          # Reescribir referencias en index.html a .min
-          sed -i.bak 's/\.\/styles\.css/.\/styles.min.css/' dist/index.html
-          sed -i.bak 's/\.\/script\.js/.\/script.min.js/' dist/index.html
-          rm dist/index.html.bak
+          cp index.html config.js sw.js favicon.svg dist/
+          cp styles.min.css dist/
+          cp script.min.js dist/
           echo "Listado de archivos en dist:" && ls -l dist
           echo "Primeras líneas de dist/styles.min.css:" && head -n 5 dist/styles.min.css || true
           echo "Primeras líneas de dist/script.min.js:" && head -n 3 dist/script.min.js || true
