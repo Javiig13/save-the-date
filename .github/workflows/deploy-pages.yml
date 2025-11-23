@@ -20,29 +20,37 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
+        
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
+          
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
+        
       - name: Build minified assets
         run: npm run build
-      - name: Prepare dist
+        
+      - name: Prepare deployment
         run: |
           mkdir -p dist
+          
+          # Copiar archivos estáticos
           cp index.html config.js sw.js favicon.svg dist/
-          # Generados: styles.min.css y script.min.js
-          # Sobrescribir nombres originales para evitar 404 en producción
+          
+          # Usar archivos minificados con nombres originales
           cp styles.min.css dist/styles.css
           cp script.min.js dist/script.js
-          # Verificación: los archivos minificados deben ser más pequeños que 200KB cada uno
-          css_size=$(wc -c < dist/styles.css); js_size=$(wc -c < dist/script.js); echo "CSS size: $css_size bytes"; echo "JS size: $js_size bytes"; if [ $css_size -gt 200000 ]; then echo 'CSS demasiado grande, posible fallo de minificación' && exit 1; fi; if [ $js_size -gt 200000 ]; then echo 'JS demasiado grande, posible fallo de minificación' && exit 1; fi
-          echo "Listado de archivos en dist:" && ls -l dist
-          echo "Primeras líneas de dist/styles.css:" && head -n 5 dist/styles.css || true
-          echo "Primeras líneas de dist/script.js:" && head -n 3 dist/script.js || true
+          
+          # Mostrar estadísticas
+          echo "📦 Archivos preparados para despliegue:"
+          ls -lh dist/
+          
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

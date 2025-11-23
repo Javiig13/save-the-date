@@ -2,10 +2,13 @@
   "name": "save-the-date-javier-ana",
   "version": "1.0.0",
   "private": true,
+  "description": "Save the Date - Javier & Ana · 18 de abril de 2026",
   "scripts": {
     "build:css": "node build/minify-css.js",
     "build:js": "node build/minify-js.js",
-    "build": "npm run build:css && npm run build:js"
+    "build": "npm run build:css && npm run build:js",
+    "dev": "echo \"Abre index.html en tu navegador o usa Live Server en VS Code\"",
+    "clean": "rm -f styles.min.css script.min.js && rm -rf dist"
   },
   "devDependencies": {
     "csso": "^5.0.5",

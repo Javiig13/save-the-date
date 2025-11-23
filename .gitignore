@@ -1,18 +1,19 @@
 # macOS
 .DS_Store
 
-# Node tooling opcional
+# Node tooling
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+package-lock.json
 
 # Entornos
 .env
 .env.*
 
-# Build outputs opcionales
-# Descomenta si no quieres commitear minificados generados
-# styles.min.css
-# script.min.js
+# Build outputs - generados automáticamente
+*.min.css
+*.min.js
+dist/
