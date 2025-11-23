@@ -48,18 +48,14 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
   setInterval(update, 1000); // actualización cada segundo
 })();
 
-/* Mapa embebido: tabs con diferentes iframes + info asociada */
+/* Mapa embebido: tabs con diferentes iframes + info asociada + galerías dinámicas */
 (() => {
   const iframe = qs('#map-iframe');
-  const gallery = qs('#venue-gallery');
-  const galleryPhotos = window.APP_CONFIG?.venue?.photos || [];
-  if (gallery && galleryPhotos.length) {
-    gallery.innerHTML = galleryPhotos.map(src => `<figure class="venue-photo"><img src="${src}" alt="Foto de la finca" loading="lazy"/></figure>`).join('');
-  }
+  const venueGallery = qs('#venue-gallery');
   const tabs = qsa('.map-tab');
   if (!iframe || tabs.length === 0) return;
 
-  const CAMINERA_Q = encodeURIComponent(window.APP_CONFIG?.venue?.query || 'Hotel Club de Campo La Caminera Torrenueva');
+  const CAMINERA_Q = encodeURIComponent(window.APP_CONFIG?.venue?.query || 'Hotel La Caminera Club de Campo Torrenueva');
   const SANTA_CRUZ_Q = encodeURIComponent((window.APP_CONFIG?.hotels?.find(h=>h.id==='santacruz')?.query) || 'Hotel Santa Cruz de Mudela');
 
   const views = {
@@ -73,17 +69,20 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
     venue: {
       title: labelCfg?.venue?.cardTitle || window.APP_CONFIG?.venue?.name || 'La Caminera',
       desc: labelCfg?.venue?.cardDesc || window.APP_CONFIG?.venue?.place || '',
-      link: window.APP_CONFIG?.venue?.googleMapsUrl || `https://www.google.com/maps?q=${CAMINERA_Q}`
+      link: window.APP_CONFIG?.venue?.googleMapsUrl || `https://www.google.com/maps?q=${CAMINERA_Q}`,
+      photos: window.APP_CONFIG?.venue?.photos || []
     },
     hotel: {
       title: labelCfg?.hotel?.cardTitle || 'Hotel Santa Cruz de Mudela',
       desc: labelCfg?.hotel?.cardDesc || 'Aprox. 18 km · ~20 min en coche',
-      link: `https://www.google.com/maps?q=${SANTA_CRUZ_Q}`
+      link: `https://www.google.com/maps?q=${SANTA_CRUZ_Q}`,
+      photos: window.APP_CONFIG?.hotels?.find(h=>h.id==='santacruz')?.photos || []
     },
     route: {
       title: labelCfg?.route?.cardTitle || 'Ruta La Caminera → Santa Cruz',
       desc: labelCfg?.route?.cardDesc || 'Trayecto aproximado 18 km (20 min)',
-      link: `https://www.google.com/maps?saddr=${CAMINERA_Q}&daddr=${SANTA_CRUZ_Q}`
+      link: `https://www.google.com/maps?saddr=${CAMINERA_Q}&daddr=${SANTA_CRUZ_Q}`,
+      photos: []
     }
   };
 
@@ -106,20 +105,20 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
       // Animación suave temática en la tarjeta
       if ($venueCard) {
         $venueCard.classList.remove('swap-animate');
-        // reflow para reiniciar animación
         void $venueCard.offsetWidth;
         $venueCard.classList.add('swap-animate');
       }
       $title.textContent = info[key]?.title || '';
       $desc.textContent = info[key]?.desc || '';
       $link.href = info[key]?.link || '#';
+      
       // Actualizar tarjeta principal
       if ($venueNameEl && $venuePlaceEl && $busNote) {
         if (key === 'venue') {
           $venueNameEl.textContent = info.venue.title;
           $venuePlaceEl.textContent = info.venue.desc;
           $busNote.textContent = (window.APP_CONFIG?.venue?.busNote) || '';
-          $busNote.hidden = true; // ocultar en vista venue
+          $busNote.hidden = true;
         } else if (key === 'hotel') {
           $venueNameEl.textContent = info.hotel.title;
           $venuePlaceEl.textContent = info.hotel.desc;
@@ -132,10 +131,27 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
           $busNote.hidden = false;
         }
       }
-    }
-    // Mostrar/ocultar galería según vista: cuando no es 'route', mostrar fotos arriba
-    if (gallery) {
-      gallery.style.display = key === 'venue' ? 'grid' : 'none';
+      
+      // Actualizar galería con fotos correspondientes
+      if (venueGallery) {
+        const photos = info[key]?.photos || [];
+        if (photos.length > 0) {
+          venueGallery.innerHTML = photos.map((src, idx) => 
+            `<figure class="venue-photo">
+              <img src="${src}" alt="Foto ${idx+1}" loading="lazy" data-fullsize="${src}"/>
+            </figure>`
+          ).join('');
+          venueGallery.style.display = 'grid';
+          
+          // Agregar click handlers para modal
+          qsa('.venue-photo img', venueGallery).forEach(img => {
+            img.style.cursor = 'pointer';
+            img.addEventListener('click', () => openImageModal(img.dataset.fullsize));
+          });
+        } else {
+          venueGallery.style.display = 'none';
+        }
+      }
     }
   }
 
@@ -143,51 +159,91 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
   setView('venue');
 })();
 
-/* Hoteles + Reveal Cupón (desde config) */
+/* Modal para ver imágenes en grande */
+(() => {
+  // Crear modal dinámicamente
+  const modal = document.createElement('div');
+  modal.className = 'image-modal';
+  modal.innerHTML = `
+    <div class="image-modal-overlay"></div>
+    <div class="image-modal-content">
+      <button class="image-modal-close" aria-label="Cerrar">&times;</button>
+      <img src="" alt="Imagen ampliada" class="image-modal-img"/>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  const overlay = modal.querySelector('.image-modal-overlay');
+  const closeBtn = modal.querySelector('.image-modal-close');
+  const img = modal.querySelector('.image-modal-img');
+
+  window.openImageModal = (src) => {
+    img.src = src;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeModal = () => {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  };
+
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', closeModal);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+  });
+})();
+
+/* Hoteles con nuevo sistema de precios y reservas */
 (() => {
   const container = qs('#hotels-list');
   if (!container) return;
   const hotels = window.APP_CONFIG?.hotels || [];
+  
   container.innerHTML = hotels.map(h => {
+    const stars = h.stars ? `<span class="hotel-stars">${'★'.repeat(h.stars)}</span>` : '';
     const tag = h.petFriendly ? '<span class="tag">pet‑friendly</span>' : '';
-  const details = h.distance || h.time ? `<ul class="details">${h.distance ? `<li>Distancia: ${h.distance}</li>` : ''}${h.time ? `<li>Tiempo: ${h.time}</li>` : ''}</ul>` : '';
-  const features = h.features && h.features.length ? `<ul class="features">${h.features.map(f=>`<li>${f}</li>`).join('')}</ul>` : '';
-    const coupon = h.coupon ? `
-      <div class="reveal">
-    <button class="reveal-btn" aria-expanded="false" aria-controls="coupon-${h.id}">Ver cupón de descuento</button>
-        <div id="coupon-${h.id}" class="reveal-panel" hidden>
-          <code class="coupon">${h.coupon.code}</code>
-          <p class="hint">${h.coupon.hint || ''}</p>
-        </div>
+    const details = h.distance || h.time ? `<ul class="details">${h.distance ? `<li>Distancia: ${h.distance}</li>` : ''}${h.time ? `<li>Tiempo: ${h.time}</li>` : ''}</ul>` : '';
+    const features = h.features && h.features.length ? `<ul class="features">${h.features.map(f=>`<li>${f}</li>`).join('')}</ul>` : '';
+    
+    // Nuevo bloque de precios
+    const pricing = h.pricing ? `
+      <div class="pricing-info">
+        <h4>Precio:</h4>
+        <ul class="pricing-list">
+          ${h.pricing.option1 ? `<li>${h.pricing.option1.nights} noche = ${h.pricing.option1.price} por ${h.pricing.option1.room}</li>` : ''}
+          ${h.pricing.option2 ? `<li>${h.pricing.option2.nights} noches = ${h.pricing.option2.pricePerNight || h.pricing.option2.price} ${h.pricing.option2.pricePerNight ? 'por habitación/noche' : 'por'} ${h.pricing.option2.room}</li>` : ''}
+        </ul>
       </div>` : '';
+    
+    // Nuevo bloque de instrucciones de reserva
+    const booking = h.booking ? `
+      <div class="booking-info">
+        <h4>Cómo reservar:</h4>
+        ${h.booking.method === 'email' ? `<p>📧 <a href="mailto:${h.booking.email}">${h.booking.email}</a></p>` : ''}
+        ${h.booking.method === 'phone' ? `<p>📞 <a href="tel:${h.booking.phone}">${h.booking.phone}</a></p>` : ''}
+        <p class="booking-instructions">${h.booking.instructions || ''}</p>
+      </div>` : '';
+    
     return `
       <article class="card">
         <header>
-          <h3>${h.name}</h3>
+          <div>
+            <h3>${h.name} ${stars}</h3>
+          </div>
           ${tag}
         </header>
         <p>${h.description || ''}</p>
         ${details}
-    ${features}
-        ${coupon}
+        ${features}
+        ${pricing}
+        ${booking}
         <div class="actions">
-          <a class="btn btn-ghost" target="_blank" rel="noopener" href="${h.url}">Ver web</a>
+          <a class="btn btn-ghost" target="_blank" rel="noopener" href="${h.url}">Ver web del hotel</a>
         </div>
       </article>`;
   }).join('');
-
-  // Bind reveals
-  qsa('.reveal-btn', container).forEach(btn => {
-    const id = btn.getAttribute('aria-controls');
-    const panel = id ? qs(`#${id}`) : null;
-    if (!panel) return;
-    btn.addEventListener('click', () => {
-      const willOpen = panel.hasAttribute('hidden');
-      panel.toggleAttribute('hidden');
-      btn.setAttribute('aria-expanded', String(willOpen));
-  btn.textContent = willOpen ? 'Ocultar descuento' : 'Ver cupón de descuento';
-    });
-  });
 })();
 
 /* Typeform */
@@ -222,7 +278,7 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
   const couple = window.APP_CONFIG?.couple || { groom: 'Javier', bride: 'Ana' };
   const dateDay = window.APP_CONFIG?.event?.dateDayText || '';
   const timeText = window.APP_CONFIG?.event?.timeText || '';
-  if (title) title.innerHTML = `${couple.groom}<br/>y ${couple.bride}`;
+  if (title) title.innerHTML = `${couple.groom}<br/><img src="./assets/rings.png" alt="" class="rings-divider" aria-hidden="true" /><br/>${couple.bride}`;
   const heroDate = qs('#hero-date'); if (heroDate) heroDate.textContent = dateDay;
   const heroTime = qs('#hero-time'); if (heroTime) heroTime.textContent = timeText;
   const heroVenue = qs('#hero-venue'); if (heroVenue) heroVenue.textContent = venueName;

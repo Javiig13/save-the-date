@@ -34,7 +34,7 @@
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;600&display=swap"
         rel="stylesheet">
     <link rel="preload" as="image"
-        href="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2069&auto=format&fit=crop" />
+        href="./assets/DSC09053.webp" />
 
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="alternate icon" href="./favicon.svg" />
@@ -101,7 +101,7 @@
             <h2 id="location-title" class="section-title">Ubicación</h2>
             <div class="location-grid">
                 <div class="location-card">
-                    <h3 id="venue-name">Hotel Club de Campo La Caminera</h3>
+                    <h3 id="venue-name">Hotel La Caminera Club de Campo</h3>
                     <p id="venue-place">Torrenueva, Ciudad Real · España</p>
                     <p id="bus-note" class="note">Habrá servicio de autobús desde La Caminera hasta Santa Cruz de
                         Mudela.</p>
@@ -119,17 +119,17 @@
                         <button class="map-tab" role="tab" aria-selected="false" data-map="route">Ruta entre
                             ambos</button>
                     </div>
+                    <div class="map-frame" id="map-frame">
+                        <iframe id="map-iframe" title="Mapa" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                            allowfullscreen></iframe>
+                    </div>
+                    <div class="gallery-panel" id="venue-gallery" aria-label="Galería de la finca"></div>
                     <div class="map-info" aria-live="polite">
                         <h3 id="map-info-title" class="map-title"></h3>
                         <p id="map-info-desc" class="map-desc"></p>
                         <a id="map-info-link" class="btn btn-ghost" target="_blank" rel="noopener">Abrir en Google
                             Maps</a>
                     </div>
-                    <div class="map-frame" id="map-frame">
-                        <iframe id="map-iframe" title="Mapa" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                            allowfullscreen></iframe>
-                    </div>
-                    <div class="gallery-panel" id="venue-gallery" aria-label="Galería de la finca"></div>
                 </div>
             </div>
         </section>

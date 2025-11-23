@@ -39,6 +39,9 @@ jobs:
           # Copiar archivos estáticos
           cp index.html config.js sw.js favicon.svg dist/
           
+          # Copiar carpeta assets
+          cp -r assets dist/
+          
           # Usar archivos minificados con nombres originales
           cp styles.min.css dist/styles.css
           cp script.min.js dist/script.js

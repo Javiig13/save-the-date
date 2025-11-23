@@ -1,9 +1,11 @@
-const CACHE = 'std-cache-v4';
+const CACHE = 'std-cache-v6';
 const ASSETS = [
   './',
   './index.html',
   './config.js',
-  './favicon.svg'
+  './favicon.svg',
+  './assets/rings.png',
+  './assets/DSC09053.webp'
 ];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(()=>self.skipWaiting()));
