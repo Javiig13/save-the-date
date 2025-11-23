@@ -51,6 +51,11 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
 /* Mapa embebido: tabs con diferentes iframes + info asociada */
 (() => {
   const iframe = qs('#map-iframe');
+  const gallery = qs('#venue-gallery');
+  const galleryPhotos = window.APP_CONFIG?.venue?.photos || [];
+  if (gallery && galleryPhotos.length) {
+    gallery.innerHTML = galleryPhotos.map(src => `<figure class="venue-photo"><img src="${src}" alt="Foto de la finca" loading="lazy"/></figure>`).join('');
+  }
   const tabs = qsa('.map-tab');
   if (!iframe || tabs.length === 0) return;
 
@@ -128,6 +133,10 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
         }
       }
     }
+    // Mostrar/ocultar galería según vista: cuando no es 'route', mostrar fotos arriba
+    if (gallery) {
+      gallery.style.display = key === 'venue' ? 'grid' : 'none';
+    }
   }
 
   tabs.forEach(btn => btn.addEventListener('click', () => setView(btn.dataset.map)));
@@ -142,6 +151,7 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
   container.innerHTML = hotels.map(h => {
     const tag = h.petFriendly ? '<span class="tag">pet‑friendly</span>' : '';
   const details = h.distance || h.time ? `<ul class="details">${h.distance ? `<li>Distancia: ${h.distance}</li>` : ''}${h.time ? `<li>Tiempo: ${h.time}</li>` : ''}</ul>` : '';
+  const features = h.features && h.features.length ? `<ul class="features">${h.features.map(f=>`<li>${f}</li>`).join('')}</ul>` : '';
     const coupon = h.coupon ? `
       <div class="reveal">
     <button class="reveal-btn" aria-expanded="false" aria-controls="coupon-${h.id}">Ver cupón de descuento</button>
@@ -158,6 +168,7 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
         </header>
         <p>${h.description || ''}</p>
         ${details}
+    ${features}
         ${coupon}
         <div class="actions">
           <a class="btn btn-ghost" target="_blank" rel="noopener" href="${h.url}">Ver web</a>

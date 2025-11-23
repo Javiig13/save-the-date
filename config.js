@@ -13,7 +13,12 @@ window.APP_CONFIG = {
     place: 'Torrenueva, Ciudad Real · España',
     query: 'Hotel Club de Campo La Caminera Torrenueva',
     googleMapsUrl: 'https://maps.google.com/?q=Hotel+Club+de+Campo+La+Caminera+Torrenueva',
-    busNote: 'Habrá servicio de autobús desde La Caminera hasta Santa Cruz de Mudela.'
+    busNote: 'Habrá servicio de autobús desde La Caminera hasta Santa Cruz de Mudela.',
+    photos: [
+      'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=600&h=400&fit=crop&auto=format&q=70',
+      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&h=400&fit=crop&auto=format&q=70',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&h=400&fit=crop&auto=format&q=70'
+    ]
   },
   hotels: [
     {
@@ -24,7 +29,8 @@ window.APP_CONFIG = {
   distance: '',
   time: '',
       url: 'https://www.hotellacaminera.com/',
-      coupon: { code: 'ANAYJAVIER', hint: 'Introduce este cupón al reservar.' }
+      coupon: { code: 'ANAYJAVIER', hint: 'Introduce este cupón al reservar.' },
+      features: ['Late checkout', 'Spa', 'Pet friendly', 'Pádel', 'Golf', 'Rutas', 'Desayuno incluido']
     },
     {
       id: 'santacruz',
@@ -34,7 +40,8 @@ window.APP_CONFIG = {
       distance: '~18 km',
       time: '~20 min',
       url: 'https://restaurante-santa-cruz.hotelcastillalamancha.com/es/',
-      query: 'Hotel Santa Cruz de Mudela'
+      query: 'Hotel Santa Cruz de Mudela',
+      features: ['Pet friendly', 'Rutas', 'Desayuno incluido']
     }
   ],
   story: [

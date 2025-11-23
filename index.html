@@ -64,7 +64,7 @@
             <div class="hero-content container">
                 <p class="eyebrow">Save the Date</p>
                 <h1 id="hero-title" class="title"></h1>
-                <p class="subtitle"><span id="hero-date"></span> · <span id="hero-time"></span></p>
+                <p class="subtitle hero-date-line"><span id="hero-date"></span><br><span class="hero-time" id="hero-time"></span></p>
                 <p id="hero-venue" class="subtitle"></p>
             </div>
             <div class="stars" aria-hidden="true"></div>
@@ -108,6 +108,7 @@
                     <div class="actions">
                         <a id="venue-link" class="btn btn-ghost" target="_blank" rel="noopener">Abrir en Google Maps</a>
                     </div>
+                    <div class="venue-photos" id="venue-photos" aria-label="Fotos de la finca"></div>
                 </div>
                 <div class="map-panel">
                     <div class="map-tabs" role="tablist" aria-label="Ver mapa">
@@ -118,16 +119,17 @@
                         <button class="map-tab" role="tab" aria-selected="false" data-map="route">Ruta entre
                             ambos</button>
                     </div>
-                    <div class="map-frame">
-                        <iframe id="map-iframe" title="Mapa" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                            allowfullscreen></iframe>
-                    </div>
                     <div class="map-info" aria-live="polite">
                         <h3 id="map-info-title" class="map-title"></h3>
                         <p id="map-info-desc" class="map-desc"></p>
                         <a id="map-info-link" class="btn btn-ghost" target="_blank" rel="noopener">Abrir en Google
                             Maps</a>
                     </div>
+                    <div class="map-frame" id="map-frame">
+                        <iframe id="map-iframe" title="Mapa" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                            allowfullscreen></iframe>
+                    </div>
+                    <div class="gallery-panel" id="venue-gallery" aria-label="Galería de la finca"></div>
                 </div>
             </div>
         </section>
