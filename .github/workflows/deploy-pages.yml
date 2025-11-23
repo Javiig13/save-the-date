@@ -38,6 +38,8 @@ jobs:
           # Sobrescribir nombres originales para evitar 404 en producción
           cp styles.min.css dist/styles.css
           cp script.min.js dist/script.js
+          # Verificación: los archivos minificados deben ser más pequeños que 200KB cada uno
+          css_size=$(wc -c < dist/styles.css); js_size=$(wc -c < dist/script.js); echo "CSS size: $css_size bytes"; echo "JS size: $js_size bytes"; if [ $css_size -gt 200000 ]; then echo 'CSS demasiado grande, posible fallo de minificación' && exit 1; fi; if [ $js_size -gt 200000 ]; then echo 'JS demasiado grande, posible fallo de minificación' && exit 1; fi
           echo "Listado de archivos en dist:" && ls -l dist
           echo "Primeras líneas de dist/styles.css:" && head -n 5 dist/styles.css || true
           echo "Primeras líneas de dist/script.js:" && head -n 3 dist/script.js || true
