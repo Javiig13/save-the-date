@@ -472,18 +472,17 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
     }
   }
   
-  // Detectar cuando se intenta abandonar la página (cerrar pestaña, cambiar URL, ir atrás, etc.)
+  // Detectar cuando se intenta abandonar la página (cerrar pestaña, cambiar URL, etc.)
   function handleBeforeUnload(e) {
-    if (modalShown || hasClickedRSVP || !pageInteracted) return;
+    if (hasClickedRSVP) return;
     
-    // Mostrar mensaje del navegador para bloquear salida
+    // Solo intentar bloquear si el usuario ha interactuado
+    if (!pageInteracted) return;
+    
+    // Mostrar mensaje del navegador (esto SÍ puede bloquear temporalmente)
     e.preventDefault();
-    e.returnValue = '¿Has confirmado tu asistencia?';
-    
-    // Mostrar nuestro modal también
-    setTimeout(() => showModal(), 100);
-    
-    return '¿Has confirmado tu asistencia?';
+    e.returnValue = '¿Has confirmado tu asistencia para la boda?';
+    return '¿Has confirmado tu asistencia para la boda?';
   }
   
   // Detectar navegación hacia atrás/adelante
