@@ -458,15 +458,32 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
   function handleBeforeUnload(e) {
     if (modalShown || hasClickedRSVP) return;
     
-    // Prevenir el cierre inmediato y mostrar nuestro modal
+    // Mostrar mensaje del navegador para bloquear salida
     e.preventDefault();
-    e.returnValue = ''; // Chrome requiere esto
+    e.returnValue = '¿Has confirmado tu asistencia?';
     
-    // Mostrar nuestro modal
-    showModal();
+    // Mostrar nuestro modal también
+    setTimeout(() => showModal(), 100);
     
-    // Retornar string para navegadores antiguos
-    return '';
+    return '¿Has confirmado tu asistencia?';
+  }
+  
+  // Detectar navegación hacia atrás/adelante
+  function setupNavigationBlock() {
+    if (hasClickedRSVP) return;
+    
+    // Añadir una entrada al historial para poder interceptar el "atrás"
+    history.pushState({modal: true}, '', location.href);
+    
+    window.addEventListener('popstate', (e) => {
+      if (hasClickedRSVP || modalShown) return;
+      
+      // Volver a añadir al historial para mantener la página
+      history.pushState({modal: true}, '', location.href);
+      
+      // Mostrar modal
+      showModal();
+    });
   }
   
   // Detectar cambios de visibilidad (cambio de pestaña en móvil/desktop)
@@ -524,15 +541,16 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
     }
   });
   
-  // Activar detección después de 3 segundos (para no molestar inmediatamente)
-  setTimeout(() => {
-    // Exit intent en desktop (mouse sale por arriba)
-    document.addEventListener('mouseout', handleMouseOut);
-    
-    // Detectar cierre de pestaña, cambio de URL, ir atrás, etc.
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    
-    // Detectar cambio de pestaña/app (móvil y desktop)
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-  }, 3000);
+  // Activar detección inmediatamente
+  // Exit intent en desktop (mouse sale por arriba)
+  document.addEventListener('mouseout', handleMouseOut);
+  
+  // Detectar cierre de pestaña, cambio de URL, etc.
+  window.addEventListener('beforeunload', handleBeforeUnload);
+  
+  // Detectar cambio de pestaña/app (móvil y desktop)
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+  
+  // Bloquear navegación hacia atrás/adelante
+  setupNavigationBlock();
 })();
