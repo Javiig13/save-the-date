@@ -35,12 +35,10 @@ window.APP_CONFIG = {
       url: "https://www.hotellacaminera.com/",
       features: [
         "Late check out a las 18:00 p.m.",
-        "Spa",
         "Pet friendly",
-        "Maravilloso SPA incluido",
+        "Spa incluido",
         "Pista de pádel",
-        "Golf",
-        "Entorno en medio de la nada con naves alrededor",
+        "Golf"
       ],
       pricing: {
         option1: {
@@ -123,5 +121,5 @@ window.APP_CONFIG = {
         "Organizaremos autobús entre La Caminera y Santa Cruz de Mudela.",
     },
   },
-  typeformUrl: "https://form.typeform.com/to/HInDr9n3",
+  typeformUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfCuH4r675Zop4nDo086gaOMJhG6FdabKGFbM_SnjhIStNmgw/viewform?usp=dialog",
 };
