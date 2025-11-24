@@ -15,7 +15,7 @@ window.APP_CONFIG = {
     googleMapsUrl:
       "https://maps.google.com/?q=Hotel+Club+de+Campo+La+Caminera+Torrenueva",
     busNote:
-      "Habrá servicio de autobús desde La Caminera hasta Santa Cruz de Mudela.",
+      "⚠️ IMPORTANTE: Las habitaciones en La Caminera son limitadas. Reserva cuanto antes para asegurar tu plaza. Habrá servicio de autobús desde La Caminera hasta Santa Cruz de Mudela.",
     photos: [
       "https://lh3.googleusercontent.com/p/AF1QipONVpdEtboWtOkZk1Zib8YWLS_rbcPAYm7kv176=s1360-w1360-h1020-rw",
       "https://lh3.googleusercontent.com/p/AF1QipPqeIxslitpArmXs9dTHZ7b-zLSU4m6gur35Lby=s1360-w1360-h1020-rw",
@@ -84,7 +84,7 @@ window.APP_CONFIG = {
       },
       booking: {
         method: "phone",
-        phone: "+34 926 123 456",
+        phone: "+34 660 400 300",
         instructions:
           "Llamar al teléfono para reservar indicando que es para la boda de Ana y Javier.",
       },
@@ -123,6 +123,5 @@ window.APP_CONFIG = {
         "Organizaremos autobús entre La Caminera y Santa Cruz de Mudela.",
     },
   },
-  // Reemplaza por tu URL real de Typeform cuando esté listo
-  typeformUrl: "https://example.typeform.com/to/javier-y-ana",
+  typeformUrl: "https://form.typeform.com/to/HInDr9n3",
 };

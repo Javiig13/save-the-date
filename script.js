@@ -118,7 +118,7 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
           $venueNameEl.textContent = info.venue.title;
           $venuePlaceEl.textContent = info.venue.desc;
           $busNote.textContent = (window.APP_CONFIG?.venue?.busNote) || '';
-          $busNote.hidden = true;
+          $busNote.hidden = false;
         } else if (key === 'hotel') {
           $venueNameEl.textContent = info.hotel.title;
           $venuePlaceEl.textContent = info.hotel.desc;
@@ -289,6 +289,14 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
   const venuePlaceEl = qs('#venue-place'); if (venuePlaceEl) venuePlaceEl.textContent = window.APP_CONFIG?.venue?.place || '';
   const bus = qs('#bus-note'); if (bus) bus.textContent = window.APP_CONFIG?.venue?.busNote || '';
   const intro = qs('#intro-text'); if (intro) intro.textContent = window.APP_CONFIG?.texts?.intro || '';
+  
+  // Configurar botón RSVP del hero con URL de Typeform
+  const heroRsvpBtn = qs('#hero-rsvp-btn');
+  if (heroRsvpBtn && window.APP_CONFIG?.typeformUrl) {
+    heroRsvpBtn.href = window.APP_CONFIG.typeformUrl;
+    heroRsvpBtn.target = '_blank';
+    heroRsvpBtn.rel = 'noopener noreferrer';
+  }
 })();
 /* Menú móvil animación mágica sutil */
 (() => {
@@ -401,4 +409,130 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
   requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+})();
+
+/* Exit Intent Modal */
+(() => {
+  const modal = qs('#exit-modal');
+  const closeBtn = qs('#exit-modal-close');
+  const rsvpBtn = qs('#exit-modal-rsvp');
+  const heroRsvpBtn = qs('#hero-rsvp-btn');
+  
+  if (!modal) return;
+  
+  // Configurar URL del botón del modal
+  if (rsvpBtn && window.APP_CONFIG?.typeformUrl) {
+    rsvpBtn.href = window.APP_CONFIG.typeformUrl;
+    rsvpBtn.target = '_blank';
+    rsvpBtn.rel = 'noopener noreferrer';
+  }
+  
+  let hasClickedRSVP = false;
+  let modalShown = false;
+  
+  // Marcar cuando el usuario hace click en cualquier link de RSVP
+  const rsvpLinks = qsa('a[href="#rsvp"], a[href*="typeform"]');
+  rsvpLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      hasClickedRSVP = true;
+      localStorage.setItem('rsvpClicked', 'true');
+    });
+  });
+  
+  // Verificar si ya había hecho click antes
+  if (localStorage.getItem('rsvpClicked') === 'true') {
+    hasClickedRSVP = true;
+  }
+  
+  // Detectar intención de salida (mouse sale por arriba en desktop)
+  function handleMouseOut(e) {
+    if (modalShown || hasClickedRSVP) return;
+    
+    // Si el mouse sale por la parte superior de la ventana
+    if (e.clientY <= 0 && e.relatedTarget === null) {
+      showModal();
+    }
+  }
+  
+  // Detectar cuando se intenta abandonar la página (cerrar pestaña, cambiar URL, ir atrás, etc.)
+  function handleBeforeUnload(e) {
+    if (modalShown || hasClickedRSVP) return;
+    
+    // Prevenir el cierre inmediato y mostrar nuestro modal
+    e.preventDefault();
+    e.returnValue = ''; // Chrome requiere esto
+    
+    // Mostrar nuestro modal
+    showModal();
+    
+    // Retornar string para navegadores antiguos
+    return '';
+  }
+  
+  // Detectar cambios de visibilidad (cambio de pestaña en móvil/desktop)
+  function handleVisibilityChange() {
+    if (document.hidden && !modalShown && !hasClickedRSVP) {
+      // Usuario está cambiando de pestaña o app
+      showModal();
+    }
+  }
+  
+  function showModal() {
+    if (modalShown || hasClickedRSVP) return;
+    
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    modalShown = true;
+    
+    // Enfocar el modal para accesibilidad
+    modal.focus();
+  }
+  
+  function closeModal() {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  
+  // Event listeners
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      closeModal();
+      localStorage.setItem('rsvpClicked', 'true');
+      hasClickedRSVP = true;
+    });
+  }
+  
+  if (rsvpBtn) {
+    rsvpBtn.addEventListener('click', () => {
+      closeModal();
+      hasClickedRSVP = true;
+      localStorage.setItem('rsvpClicked', 'true');
+    });
+  }
+  
+  // Cerrar con ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.style.display === 'flex') {
+      closeModal();
+    }
+  });
+  
+  // Cerrar al hacer click en el overlay
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal || e.target.classList.contains('exit-modal-overlay')) {
+      closeModal();
+    }
+  });
+  
+  // Activar detección después de 3 segundos (para no molestar inmediatamente)
+  setTimeout(() => {
+    // Exit intent en desktop (mouse sale por arriba)
+    document.addEventListener('mouseout', handleMouseOut);
+    
+    // Detectar cierre de pestaña, cambio de URL, ir atrás, etc.
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    // Detectar cambio de pestaña/app (móvil y desktop)
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+  }, 3000);
 })();

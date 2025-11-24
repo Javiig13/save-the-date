@@ -66,6 +66,11 @@
                 <h1 id="hero-title" class="title"></h1>
                 <p class="subtitle hero-date-line"><span id="hero-date"></span><br><span class="hero-time" id="hero-time"></span></p>
                 <p id="hero-venue" class="subtitle"></p>
+                <div class="hero-cta">
+                    <a id="hero-rsvp-btn" class="btn btn-primary btn-large" href="#rsvp">
+                        ✨ Confirma tu asistencia ✨
+                    </a>
+                </div>
             </div>
             <div class="stars" aria-hidden="true"></div>
         </section>
@@ -153,6 +158,22 @@
     <footer class="site-footer">
         <p>© 2026 Javier & Ana</p>
     </footer>
+
+    <!-- Exit Intent Modal -->
+    <div id="exit-modal" class="exit-modal" role="dialog" aria-labelledby="exit-modal-title" aria-modal="true" style="display: none;">
+        <div class="exit-modal-overlay"></div>
+        <div class="exit-modal-content">
+            <div class="exit-modal-header">
+                <span class="exit-modal-icon">✨</span>
+            </div>
+            <h2 id="exit-modal-title" class="exit-modal-title">¡Espera un momento!</h2>
+            <p class="exit-modal-text">¿Has confirmado tu asistencia? Es muy importante para nosotros saber si podrás acompañarnos en este día tan especial.</p>
+            <div class="exit-modal-actions">
+                <a id="exit-modal-rsvp" class="btn btn-primary" href="#rsvp">Sí, quiero confirmar ahora</a>
+                <button id="exit-modal-close" class="btn btn-ghost">Ya he confirmado</button>
+            </div>
+        </div>
+    </div>
 
     <canvas class="cursor-trail-canvas" aria-hidden="true"></canvas>
     <script src="./config.js"></script>
