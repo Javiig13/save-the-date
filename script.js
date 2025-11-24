@@ -429,6 +429,24 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
   
   let hasClickedRSVP = false;
   let modalShown = false;
+  let pageInteracted = false; // Para evitar falsos positivos al cargar
+  
+  // Marcar interacción del usuario
+  const markInteraction = () => {
+    if (!pageInteracted) {
+      pageInteracted = true;
+      document.removeEventListener('mousemove', markInteraction);
+      document.removeEventListener('scroll', markInteraction);
+      document.removeEventListener('touchstart', markInteraction);
+      document.removeEventListener('click', markInteraction);
+    }
+  };
+  
+  // Detectar interacción real del usuario
+  document.addEventListener('mousemove', markInteraction, { once: true, passive: true });
+  document.addEventListener('scroll', markInteraction, { once: true, passive: true });
+  document.addEventListener('touchstart', markInteraction, { once: true, passive: true });
+  document.addEventListener('click', markInteraction, { once: true, passive: true });
   
   // Marcar cuando el usuario hace click en cualquier link de RSVP
   const rsvpLinks = qsa('a[href="#rsvp"], a[href*="typeform"]');
@@ -446,7 +464,7 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
   
   // Detectar intención de salida (mouse sale por arriba en desktop)
   function handleMouseOut(e) {
-    if (modalShown || hasClickedRSVP) return;
+    if (modalShown || hasClickedRSVP || !pageInteracted) return;
     
     // Si el mouse sale por la parte superior de la ventana
     if (e.clientY <= 0 && e.relatedTarget === null) {
@@ -456,7 +474,7 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
   
   // Detectar cuando se intenta abandonar la página (cerrar pestaña, cambiar URL, ir atrás, etc.)
   function handleBeforeUnload(e) {
-    if (modalShown || hasClickedRSVP) return;
+    if (modalShown || hasClickedRSVP || !pageInteracted) return;
     
     // Mostrar mensaje del navegador para bloquear salida
     e.preventDefault();
@@ -476,7 +494,7 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
     history.pushState({modal: true}, '', location.href);
     
     window.addEventListener('popstate', (e) => {
-      if (hasClickedRSVP || modalShown) return;
+      if (hasClickedRSVP || modalShown || !pageInteracted) return;
       
       // Volver a añadir al historial para mantener la página
       history.pushState({modal: true}, '', location.href);
@@ -488,7 +506,7 @@ function qsa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
   
   // Detectar cambios de visibilidad (cambio de pestaña en móvil/desktop)
   function handleVisibilityChange() {
-    if (document.hidden && !modalShown && !hasClickedRSVP) {
+    if (document.hidden && !modalShown && !hasClickedRSVP && pageInteracted) {
       // Usuario está cambiando de pestaña o app
       showModal();
     }
